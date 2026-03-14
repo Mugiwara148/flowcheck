@@ -1,9 +1,7 @@
 import { useState, useRef } from "react";
 
-async function startCheckout() {
-  const res = await fetch('/api/checkout', { method: 'POST' });
-  const data = await res.json();
-  if (data.url) window.location.href = data.url;
+function startCheckout() {
+  window.location.href = 'https://buy.stripe.com/3cI00k9554iL5Na4APf7i00';
 }
 
 const COLORS = {
