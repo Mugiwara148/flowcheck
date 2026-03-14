@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useAuth, SignIn, UserButton } from "@clerk/react";
 
 function startCheckout() {
   window.location.href = 'https://buy.stripe.com/3cI00k9554iL5Na4APf7i00';
@@ -514,6 +515,8 @@ export default function App() {
   const [lang, setLang] = useState("en");
   const t = T[lang];
 
+  const { isSignedIn, isLoaded } = useAuth();
+
   const saveTrade = (trade) => { setTrades(prev => [...prev, trade]); setTab("journal"); };
 
   const tabStyle = (active) => ({
@@ -523,15 +526,32 @@ export default function App() {
     color: active ? "#000" : COLORS.muted, transition: "all 0.2s"
   });
 
+  if (!isLoaded) return (
+    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ color: COLORS.accent, fontSize: 14 }}>Loading...</div>
+    </div>
+  );
+
+  if (!isSignedIn) return (
+    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "'DM Mono', monospace" }}>
+      <div style={{ marginBottom: 32, textAlign: "center" }}>
+        <div style={{ width: 48, height: 48, borderRadius: 10, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24, fontWeight: 900, color: "#000", margin: "0 auto 16px" }}>F</div>
+        <h1 style={{ fontSize: 28, fontWeight: 800, color: COLORS.text, margin: 0 }}>FlowCheck</h1>
+        <p style={{ color: COLORS.muted, fontSize: 14, marginTop: 8 }}>Sign in to access your trade analyzer</p>
+      </div>
+      <SignIn />
+    </div>
+  );
+
   return (
     <div style={{ minHeight: "100vh", background: COLORS.bg, fontFamily: "'DM Mono', 'Fira Code', monospace", color: COLORS.text }}>
       <style>{`* { box-sizing: border-box; } select option { background: #16161f; } ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }`}</style>
 
       <div style={{ borderBottom: `1px solid ${COLORS.border}`, padding: "0 32px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 60, position: "sticky", top: 0, background: COLORS.bg, zIndex: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 6, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#000" }}>T</div>
+          <div style={{ width: 28, height: 28, borderRadius: 6, background: COLORS.accent, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14, fontWeight: 900, color: "#000" }}>F</div>
           <div>
-            <span style={{ fontSize: 15, fontWeight: 800, color: COLORS.text }}>{t.appName}</span>
+            <span style={{ fontSize: 15, fontWeight: 800, color: COLORS.text }}>FlowCheck</span>
             <span style={{ fontSize: 11, color: COLORS.muted, marginLeft: 8 }}>powered by AI</span>
           </div>
         </div>
@@ -540,9 +560,7 @@ export default function App() {
           background: COLORS.accent, color: "#000",
           fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginRight: 16
         }}>Subscribe $19/mo</button>
-
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          {/* Language Toggle */}
           <div style={{ display: "flex", background: COLORS.surface, border: `1px solid ${COLORS.border}`, borderRadius: 8, padding: 3, gap: 2 }}>
             {["en", "de"].map(l => (
               <button key={l} onClick={() => setLang(l)} style={{
@@ -559,6 +577,7 @@ export default function App() {
               {t.tabJournal}{trades.length > 0 && <span style={{ marginLeft: 6, background: COLORS.accentDim, color: COLORS.accent, borderRadius: 10, padding: "1px 6px", fontSize: 11 }}>{trades.length}</span>}
             </button>
           </div>
+          <UserButton />
         </div>
       </div>
 
