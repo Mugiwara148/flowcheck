@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+
+async function startCheckout() {
+  const res = await fetch('/api/checkout', { method: 'POST' });
+  const data = await res.json();
+  if (data.url) window.location.href = data.url;
+}
 
 const COLORS = {
   bg: "#0a0a0f", surface: "#111118", card: "#16161f", border: "#1e1e2e",
@@ -531,6 +537,11 @@ export default function App() {
             <span style={{ fontSize: 11, color: COLORS.muted, marginLeft: 8 }}>powered by AI</span>
           </div>
         </div>
+        <button onClick={startCheckout} style={{
+          padding: "8px 18px", borderRadius: 8, border: "none",
+          background: COLORS.accent, color: "#000",
+          fontSize: 13, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", marginRight: 16
+        }}>Subscribe $19/mo</button>
 
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           {/* Language Toggle */}
@@ -539,7 +550,7 @@ export default function App() {
               <button key={l} onClick={() => setLang(l)} style={{
                 padding: "5px 12px", borderRadius: 6, border: "none", cursor: "pointer",
                 background: lang === l ? COLORS.accent : "transparent",
-                color: lang === l ? "#000" : COLORS.muted,
+                color: lang === l ? "#000" : COLORS.muted,§
                 fontSize: 12, fontWeight: 700, fontFamily: "inherit", transition: "all 0.2s"
               }}>{l.toUpperCase()}</button>
             ))}
