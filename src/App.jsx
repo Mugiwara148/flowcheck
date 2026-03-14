@@ -550,7 +550,7 @@ export default function App() {
               <button key={l} onClick={() => setLang(l)} style={{
                 padding: "5px 12px", borderRadius: 6, border: "none", cursor: "pointer",
                 background: lang === l ? COLORS.accent : "transparent",
-                color: lang === l ? "#000" : COLORS.muted,§
+                color: lang === l ? "#000" : COLORS.muted,
                 fontSize: 12, fontWeight: 700, fontFamily: "inherit", transition: "all 0.2s"
               }}>{l.toUpperCase()}</button>
             ))}
